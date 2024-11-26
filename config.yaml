@@ -1,0 +1,54 @@
+# config.yaml
+train:
+  seed: 42
+  init_checkpoint: "PLATO.pt"
+  num_train_epochs: 10
+  train_batch_size: 5
+  learning_rate: 1e-4
+
+eval:
+  stage: "train"
+  dev_batch_size: 10
+  test_batch_size: 10
+  eval_interval: 100
+  
+model:
+  backbone: multimodal
+  config_file: "model/plato/config.json"
+  pretrained: true
+  num_classes: 10
+  temperature: 0.2
+  local_loss_rate: 0.2
+  output_dir: "./output"
+  best_model: "best_model.pt"
+
+data:
+  dataset_name: "mmdialog"
+  data_dir: "./data"
+  img_dir: "./img"
+  use_image_tensors: true
+  image_tensor_dir: "./image_features"
+  max_lines: 960
+  starting_batch_idx: 0
+  batch_per_file: 32
+  line_sep_token: "\t"    
+  sample_sep_token: "|"  
+  turn_sep_token: "#"     
+  use_sep_token: true 
+  num_neg_samples: 8
+  num_all_samples: 10
+  max_context_length: 15
+  max_seq_length: 512  
+
+ddp:
+  backend: nccl
+  init_method: tcp://localhost:23456
+  world_size: 4  # Number of GPUs for training
+  rank: 0
+  gpu: 0
+
+logging:
+  log_dir: "./logs"
+  log_file: "train.log"
+  save_interval: 10
+  log_level: INFO
